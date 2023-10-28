@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight List</title>
+</head>
+<body>
+    <h1>Flight List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Airline</th>
+                <th>Type</th>
+                <th>Gate</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flight in flights %}
+                <tr>
+                    <td>{{ flight.airline }}</td>
+                    <td>{{ flight.get_type_display }}</td>
+                    <td>{{ flight.gate }}</td>
+                    <td>{{ flight.departure }}</td>
+                    <td>{{ flight.arrival }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

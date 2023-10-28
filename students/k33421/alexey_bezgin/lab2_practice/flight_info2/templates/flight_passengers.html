@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Passengers on {{ flight }}</title>
+</head>
+<body>
+<h2>Passengers on Flight {{ flight }}</h2>
+<ul>
+    {% for reservation in reservations %}
+    <li>{{ reservation.user.username }} - Ticket Number: {{ reservation.ticket }}</li>
+    {% empty %}
+    <li>No passengers registered for this flight.</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

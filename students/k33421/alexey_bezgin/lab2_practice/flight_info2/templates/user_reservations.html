@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Reservations</title>
+</head>
+<body>
+    <h2>Your Reservations</h2>
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                Flight: {{ reservation.flight }}
+                Registered: {{ reservation.registered }}
+                Ticket Number: {{ reservation.ticket }}
+                Seat №: {{ reservation.seat }}
+
+                <a href="{% url 'edit_reservation' reservation.id %}">Edit</a>
+                <a href="{% url 'delete_reservation' reservation.id %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
