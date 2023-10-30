@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -77,7 +78,7 @@ def delete_reservation(request, reservation_id):
     return render(request, 'delete_reservation.html', {'reservation': reservation})
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def flight_passengers(request, flight_id):
     flight = Flight.objects.get(pk=flight_id)
     reservations = Reservation.objects.filter(flight=flight)
