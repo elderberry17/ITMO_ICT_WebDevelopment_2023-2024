@@ -31,6 +31,16 @@ urlpatterns = [
     path('companies_payouts/', CompanyPayoutSummaryView.as_view(), name='payout_summary'),
     path('report/', ReportView.as_view(), name='report'),
     path('auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken'))
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('company/create/', CompanyCreateView.as_view(), name='company-create'),
+    path('agent/create/', AgentCreateView.as_view(), name='agent-create'),
+    path('agent_contract/create/', AgentContractCreateView.as_view(), name='agent_contract-create'),
+    path('employee/create/', EmployeeCreateView.as_view(), name='employee-create'),
+    path('collective_agreement/create/', CollectiveAgreementCreateView.as_view(), name='collective_agreement-create'),
+    path('individual_agreement/create/', IndividualAgreementCreateView.as_view(), name='individual_agreement-create'),
+    path('collective_insurance_claim/create/', CollectiveInsuranceClaimCreateView.as_view(),
+         name='collective_insurance_claim-create'),
+    path('individual_insurance_claim/create/', IndividualInsuranceClaimCreateView.as_view(),
+         name='individual_insurance_claim-create'),
 
 ]

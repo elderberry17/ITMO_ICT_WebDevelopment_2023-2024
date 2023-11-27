@@ -118,3 +118,16 @@ class IndividualInsuranceClaim(models.Model):
 
     def __str__(self):
         return f"individual case {self.date_of_claim}"
+
+
+
+
+
+
+## Add Agent Contract
+## Add Insurace Claim
+## Add all basic model!!
+
+## Распространить отображения в Report
+## И договора, и страховые случаи для компании
+

@@ -65,6 +65,11 @@ class AgentReportSerializer(serializers.Serializer):
     total_individual_agreements = serializers.IntegerField()
     total_individual_payout = serializers.DecimalField(max_digits=10, decimal_places=2)
 
+    total_collective_claims = serializers.IntegerField()
+    total_collective_payout_claims = serializers.DecimalField(max_digits=10, decimal_places=2)
+    total_individual_claims = serializers.IntegerField()
+    total_individual_payout_claims = serializers.DecimalField(max_digits=10, decimal_places=2)
+
 
 class CompanyReportSerializer(serializers.Serializer):
     company_id = serializers.IntegerField()
@@ -73,3 +78,33 @@ class CompanyReportSerializer(serializers.Serializer):
     total_collective_payout = serializers.DecimalField(max_digits=10, decimal_places=2)
     total_individual_agreements = serializers.IntegerField()
     total_individual_payout = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    total_collective_claims = serializers.IntegerField()
+    total_collective_payout_claims = serializers.DecimalField(max_digits=10, decimal_places=2)
+    total_individual_claims = serializers.IntegerField()
+    total_individual_payout_claims = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = '__all__'
+
+
+class AgentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agent
+        fields = '__all__'
+
+
+class AgentContractSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AgentContract
+        fields = '__all__'
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'
+

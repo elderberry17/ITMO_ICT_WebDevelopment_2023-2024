@@ -2,6 +2,7 @@ from django.db.models import Count
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -184,6 +185,19 @@ class ReportView(APIView):
             agent_individual_payout = agent_individual_agreements.aggregate(Sum('total_payout'))[
                                           'total_payout__sum'] or 0
 
+            agent_collective_claims = CollectiveInsuranceClaim.objects.filter(
+                agreement__agent=agent
+            )
+
+            agent_individual_claims = IndividualInsuranceClaim.objects.filter(
+                employee__agent=agent
+            )
+
+            agent_collective_payout_claims = agent_collective_claims.aggregate(Sum('payout_amount'))[
+                                                 'payout_amount__sum'] or 0
+            agent_individual_payout_claims = agent_individual_claims.aggregate(Sum('payout_amount'))[
+                                                 'payout_amount__sum'] or 0
+
             agent_serializer_data = {
                 'agent_id': agent.id,
                 'agent_full_name': agent.full_name,
@@ -191,6 +205,10 @@ class ReportView(APIView):
                 'total_collective_payout': agent_collective_payout,
                 'total_individual_agreements': agent_individual_agreements.count(),
                 'total_individual_payout': agent_individual_payout,
+                "total_collective_claims": agent_collective_claims.count(),
+                "total_collective_payout_claims": agent_collective_payout_claims,
+                "total_individual_claims": agent_individual_claims.count(),
+                "total_individual_payout_claims": agent_individual_payout_claims,
             }
 
             agent_data.append(agent_serializer_data)
@@ -204,26 +222,46 @@ class ReportView(APIView):
             company_collective_payout = company_collective_agreements.aggregate(Sum('total_payout'))[
                                             'total_payout__sum'] or 0
 
+            company_collective_claims = CollectiveInsuranceClaim.objects.filter(agreement__company=company)
+            company_collective_claims_count = company_collective_claims.count()
+            company_collective_claims_payout = company_collective_claims.aggregate(Sum('payout_amount'))[
+                                                   'payout_amount__sum'] or 0
+
             company_employees = Employee.objects.filter(company=company)
             company_individual_count = 0
             company_individual_payout = 0
 
+            company_individual_claims_count = 0
+            company_individual_claims_payout = 0
+
             for employee in company_employees:
+                employee_individual_agreements = IndividualAgreement.objects.filter(
+                    employee_id=employee.id
+                )
+
+                company_individual_count += employee_individual_agreements.count()
+                company_individual_payout += employee_individual_agreements.aggregate(Sum('total_payout'))[
+                                                 'total_payout__sum'] or 0
+
                 employee_individual_claims = IndividualInsuranceClaim.objects.filter(
                     employee_id=employee.id
                 )
 
-                company_individual_count += employee_individual_claims.count()
-                company_individual_payout += employee_individual_claims.aggregate(Sum('payout_amount'))[
-                                                 'payout_amount__sum'] or 0
+                company_individual_claims_count += employee_individual_claims.count()
+                company_individual_claims_payout += employee_individual_claims.aggregate(Sum('payout_amount'))[
+                                                        'payout_amount__sum'] or 0
 
             company_serializer_data = {
                 'company_id': company.id,
                 'company_full_name': company.full_name,
                 'total_collective_agreements': company_collective_count,
-                'total_collective_payout': company_individual_payout,
-                'total_individual_agreements': company_collective_count,
+                'total_collective_payout': company_collective_payout,
+                'total_individual_agreements': company_individual_count,
                 'total_individual_payout': company_individual_payout,
+                "total_collective_claims": company_collective_claims_count,
+                "total_collective_payout_claims": company_collective_claims_payout,
+                "total_individual_claims": company_individual_claims_count,
+                "total_individual_payout_claims": company_individual_claims_payout,
             }
             company_data.append(company_serializer_data)
 
@@ -235,3 +273,43 @@ class ReportView(APIView):
             'company_report': company_serializer.data
 
         }, status=status.HTTP_200_OK)
+
+
+class CompanyCreateView(generics.CreateAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+
+
+class AgentCreateView(generics.CreateAPIView):
+    queryset = Agent.objects.all()
+    serializer_class = AgentSerializer
+
+
+class AgentContractCreateView(generics.CreateAPIView):
+    queryset = AgentContract.objects.all()
+    serializer_class = AgentContractSerializer
+
+
+class EmployeeCreateView(generics.CreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+
+class CollectiveAgreementCreateView(generics.CreateAPIView):
+    queryset = CollectiveAgreement.objects.all()
+    serializer_class = CollectiveAgreementSerializer
+
+
+class IndividualAgreementCreateView(generics.CreateAPIView):
+    queryset = IndividualAgreement.objects.all()
+    serializer_class = IndividualAgreementSerializer
+
+
+class CollectiveInsuranceClaimCreateView(generics.CreateAPIView):
+    queryset = CollectiveInsuranceClaim.objects.all()
+    serializer_class = CollectiveInsuranceClaimSerializer
+
+
+class IndividualInsuranceClaimCreateView(generics.CreateAPIView):
+    queryset = IndividualInsuranceClaim.objects.all()
+    serializer_class = IndividualInsuranceClaimSerializer
