@@ -17,3 +17,9 @@ nav:
       - lw2/forms.md
       - lw2/views.md
       - lw2/urls.md
+  - "№3: Страховая контора":
+      - lw3/models.md
+      - lw3/views.md
+      - lw3/serializers.md
+  - "№4: Страховая контора с фронтендом":
+      - lw4/vue.md
